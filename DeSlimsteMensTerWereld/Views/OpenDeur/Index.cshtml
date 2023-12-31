@@ -1,0 +1,91 @@
+﻿@model DeSlimsteMensTerWereld.Models.OpenDeur.OpenDeurViewModel
+@{
+    ViewData["Title"] = "Open deur";
+}
+
+<div class="text-center">
+    <div class="teams">
+        @foreach (var team in @Model.Teams)
+        {
+            <div class="team-names">
+                <h2 class="display-4">@team.TeamName</h2>
+                <p class="seconds" id="seconds-@team.TeamName.Replace(' ', '-').ToLower()">@team.AmountOfSecondsLeft</p>
+            </div>
+        }
+    </div>
+    
+    <div class="open-deur">
+        @{ var rondeNummer = 1; }
+        @foreach(var ronde in Model.Rondes) {
+            <div id="opendeur-ronde-@rondeNummer" style="display: none;">
+                <h3>Ronde @rondeNummer</h3>
+                <ul>
+                        <li class="blur antwoord antwoord-1">@ronde.Antwoord1</li>
+                        <li class="blur antwoord antwoord-2">@ronde.Antwoord2</li>
+                        <li class="blur antwoord antwoord-3">@ronde.Antwoord3</li>
+                        <li class="blur antwoord antwoord-4">@ronde.Antwoord4</li>
+                </ul>
+            </div>
+
+            rondeNummer++;
+        }
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+     function updateSeconds() {
+         $.get('/admin/DrieZesNegenStatus', function(data) {
+             console.log(data);
+            
+             data.teams.forEach((team) => {
+                 const teamName = '#seconds-' + team.teamName.replace(' ', '-').replace(' ', '-').toLowerCase();
+                 $(teamName).html(team.amountOfSecondsLeft)
+             });
+
+             setTimeout(updateSeconds, 500);
+         });
+     }
+     
+     function updateRondeDetails() {
+          $.get('/opendeur/rondedetails', function(data) {
+              console.log(data);
+             
+              var rondeIndex = 1;
+              data.rondes.forEach((ronde) => {
+                  const rondeId = '#opendeur-ronde-' + rondeIndex;
+
+                  if (ronde.toonAntwoord1) {
+                    $(rondeId + ' .antwoord-1').removeClass('blur');
+                  }
+                  
+                  if (ronde.toonAntwoord2) {
+                      $(rondeId + ' .antwoord-2').removeClass('blur');
+                    }
+                  
+                  if (ronde.toonAntwoord3) {
+                  $(rondeId + ' .antwoord-3').removeClass('blur');
+                }
+                  
+                  if (ronde.toonAntwoord4) {
+                  $(rondeId + ' .antwoord-4').removeClass('blur');
+                }
+                  
+                  if (rondeIndex === data.activeRonde) {
+                      $(rondeId).show();
+                  } else {
+                      $('#opendeur-ronde-' + rondeIndex).hide();
+                  }
+                  
+                 rondeIndex++;       
+              });
+    
+              setTimeout(updateRondeDetails, 500);
+          });
+      }
+     
+     updateSeconds();
+     updateRondeDetails();
+ </script>
+}

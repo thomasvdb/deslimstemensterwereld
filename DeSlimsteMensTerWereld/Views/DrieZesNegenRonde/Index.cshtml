@@ -1,0 +1,51 @@
+﻿@model DeSlimsteMensTerWereld.Models.DrieZesNegenRonde.DrieZesNegenRondeViewModel
+@{
+    ViewData["Title"] = "3-6-9";
+}
+
+<div class="text-center">
+    <div class="teams">
+        @foreach (var team in @Model.Teams)
+        {
+            <div class="team-names">
+                <h2 class="display-4">@team.TeamName</h2>
+                <p class="seconds" id="seconds-@team.TeamName.Replace(' ', '-').ToLower()">@team.AmountOfSecondsLeft</p>
+            </div>
+        }
+    </div>
+
+    <div class="question-numbers">
+        @for (var i = 1; i < 13; i++)
+        {
+            <span class="question" id="question-@i">@i.ToString()</span>
+        }
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+     function updateSeconds() {
+         $.get('/admin/DrieZesNegenStatus', function(data) {
+             console.log(data);
+            
+             data.teams.forEach((team) => {
+                 const teamName = '#seconds-' + team.teamName.replace(' ', '-').replace(' ', '-').toLowerCase();
+                 $(teamName).html(team.amountOfSecondsLeft)
+             });
+             
+             if (data.activeQuestion > 1) {
+                 var previousQuestionId = '#question-' + (data.activeQuestion - 1);
+                 $(previousQuestionId).removeClass('active-question');
+             }
+             
+             var questionId = '#question-' + data.activeQuestion;
+             $(questionId).addClass('active-question');
+             
+             setTimeout(updateSeconds, 1000);
+         });
+     }
+     
+    updateSeconds();
+ </script>
+}

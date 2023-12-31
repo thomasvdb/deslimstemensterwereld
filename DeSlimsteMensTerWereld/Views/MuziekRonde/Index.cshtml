@@ -1,0 +1,36 @@
+﻿@model DeSlimsteMensTerWereld.Models.MuziekRonde.MuziekRondeViewModel
+@{
+    ViewData["Title"] = "Muziek ronde";
+}
+
+<div class="text-center">
+    <div class="teams">
+        @foreach (var team in @Model.Teams)
+        {
+            <div class="team-names">
+                <h2 class="display-4">@team.TeamName</h2>
+                <p id="seconds-@team.TeamName.Replace(' ', '-').ToLower()">@team.AmountOfSecondsLeft</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+     function updateSeconds() {
+         $.get('/admin/DrieZesNegenStatus', function(data) {
+             console.log(data);
+            
+             data.teams.forEach((team) => {
+                 const teamName = '#seconds-' + team.teamName.replace(' ', '-').replace(' ', '-').toLowerCase();
+                 $(teamName).html(team.amountOfSecondsLeft)
+             });
+
+             setTimeout(updateSeconds, 500);
+         });
+     }
+     
+    updateSeconds();
+ </script>
+}

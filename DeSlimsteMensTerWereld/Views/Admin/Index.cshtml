@@ -1,0 +1,275 @@
+@model DeSlimsteMensTerWereld.Models.Admin.AdminViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>3-6-9</h2>
+<div class="container">
+    @foreach (var team in Model.Teams)
+    {
+        <button onclick="startAndStopTimer('@team.TeamName')">Start tijd voor @team.TeamName</button>
+    }
+</div>
+<br />
+<div class="container">
+    @foreach (var team in Model.Teams)
+    {
+        <button onclick="nextQuestion('@team.TeamName')">Antwoord gegeven door @team.TeamName</button>
+    }
+    
+    <button onclick="nextQuestion('none')">Geen antwoord gegeven door een team</button>
+</div>
+
+<h2>Open deur</h2>
+<div class="container">
+    @foreach (var team in Model.Teams)
+    {
+        <button onclick="startAndStopTimer('@team.TeamName')">Start tijd voor @team.TeamName</button>
+    }
+    
+    <button onclick="startAndStopTimer('none')">Antwoorden niet allemaal gevonden</button>
+</div>
+<br />
+
+<div class="container">
+    @{int rondeNummer = 1;}
+    
+    @foreach (var ronde in Model.OpenDeurViewModel.Rondes)
+    {
+        <h3>Ronde @rondeNummer</h3>
+        <button onclick="setRondeActief(@rondeNummer)">Zet actief</button>
+        <ul>
+            <button onclick="showAnswerOpenDeur(@rondeNummer, 1)">@ronde.Antwoord1</button>
+            <button onclick="showAnswerOpenDeur(@rondeNummer, 2)">@ronde.Antwoord2</button>
+            <button onclick="showAnswerOpenDeur(@rondeNummer, 3)">@ronde.Antwoord3</button>
+            <button onclick="showAnswerOpenDeur(@rondeNummer, 4)">@ronde.Antwoord4</button>
+        </ul>
+        
+        rondeNummer++;
+    }
+</div>
+
+<h2>Puzzel ronde</h2>
+<div class="container">
+    @foreach (var team in Model.Teams)
+    {
+        <button onclick="startAndStopTimer('@team.TeamName')">Start tijd voor @team.TeamName</button>
+    }
+    
+    <button onclick="startAndStopTimer('none')">Antwoorden niet allemaal gevonden</button>
+</div>
+<br />
+
+<div class="container">
+@{int puzzelRondeNummer = 1;}
+@foreach (var ronde in Model.PuzzelRondeViewModel.Rondes)
+{
+    <h3>Ronde @puzzelRondeNummer</h3>
+    <button onclick="setPuzzleRondeActief(@puzzelRondeNummer)">Zet actief</button>
+    <ul>
+        <button onclick="showAnswerPuzzelRonde(@puzzelRondeNummer, 1)">@ronde.Group1.Antwoord</button>
+        <button onclick="showAnswerPuzzelRonde(@puzzelRondeNummer, 2)">@ronde.Group2.Antwoord</button>
+        <button onclick="showAnswerPuzzelRonde(@puzzelRondeNummer, 3)">@ronde.Group3.Antwoord</button>
+    </ul>
+    
+    puzzelRondeNummer++;
+}
+</div>
+
+<h2>Film fragment</h2>
+@foreach (var team in Model.Teams)
+{
+    <button onclick="startAndStopTimer('@team.TeamName')">Start tijd voor @team.TeamName</button>
+}
+
+<button onclick="startAndStopTimer('none')">Antwoorden niet allemaal gevonden</button>
+
+@{int rondeNummerFilmFragment = 1;}
+@foreach (var ronde in Model.FilmFragmentViewModel.Rondes)
+{
+    <h3>Ronde @rondeNummerFilmFragment</h3>
+    <button onclick="setFilmFragmentActief(@rondeNummerFilmFragment)">Zet actief</button>
+    <ul>
+        <button onclick="showAnswerFilmFragment(@rondeNummerFilmFragment, 1)">@ronde.Antwoord1</button>
+        <button onclick="showAnswerFilmFragment(@rondeNummerFilmFragment, 2)">@ronde.Antwoord2</button>
+        <button onclick="showAnswerFilmFragment(@rondeNummerFilmFragment, 3)">@ronde.Antwoord3</button>
+        <button onclick="showAnswerFilmFragment(@rondeNummerFilmFragment, 4)">@ronde.Antwoord4</button>
+        <button onclick="showAnswerFilmFragment(@rondeNummerFilmFragment, 5)">@ronde.Antwoord5</button>
+    </ul>
+    
+    rondeNummerFilmFragment++;
+}
+
+<h2>Muziekronde</h2>
+@foreach (var team in Model.Teams)
+{
+    <button onclick="startAndStopTimer('@team.TeamName')">Start tijd voor @team.TeamName</button>
+}
+
+<button onclick="startAndStopTimer('none')">Antwoorden niet allemaal gevonden</button>
+
+@foreach (var team in Model.Teams)
+{
+    <button onclick="addSecondsToTeam('@team.TeamName')">Voeg tijd toe voor @team.TeamName</button>
+}
+
+<h2>Finale</h2>
+@foreach (var team in Model.Teams)
+{
+    <button onclick="disableTeam('@team.TeamName')">Uitschakelen @team.TeamName voor finale</button>
+}
+
+@foreach (var team in Model.Teams)
+{
+    <button onclick="startAndStopTimer('@team.TeamName')">Start tijd voor @team.TeamName</button>
+}
+
+<button onclick="startAndStopTimer('none')">Antwoorden niet allemaal gevonden</button>
+
+@{int rondeNummerFinale = 1;}
+@foreach (var ronde in Model.FinaleRondeViewModel.Rondes)
+{
+    <h3>Ronde @rondeNummerFinale</h3>
+    <button onclick="setFinaleActief(@rondeNummerFinale)">Zet actief</button>
+    <ul>
+        <button onclick="showAnswerFinale(@rondeNummerFinale, 1)">@ronde.Antwoord1</button>
+        <button onclick="showAnswerFinale(@rondeNummerFinale, 2)">@ronde.Antwoord2</button>
+        <button onclick="showAnswerFinale(@rondeNummerFinale, 3)">@ronde.Antwoord3</button>
+        <button onclick="showAnswerFinale(@rondeNummerFinale, 4)">@ronde.Antwoord4</button>
+        <button onclick="showAnswerFinale(@rondeNummerFinale, 5)">@ronde.Antwoord5</button>
+    </ul>
+    
+    rondeNummerFinale++;
+}
+
+<script type="text/javascript">
+    let currentActiveTeam = '';
+    
+    function startAndStopTimer(teamName) {
+        if (currentActiveTeam === teamName) {
+            currentActiveTeam = '';    
+        }
+        else {
+            currentActiveTeam = teamName;
+        }
+        
+        $.ajax({
+            url: '/admin/StartStopTimer/' + teamName,
+            type: 'PUT'
+        });
+    }
+    
+    function showAnswerOpenDeur(rondeNumber, nummerVraag) {
+        if (!currentActiveTeam) {
+            alert("Missing active team!");
+            return;
+        }
+        
+        $.ajax({
+            url: '/admin/OpenDeur/' + currentActiveTeam + '/' + rondeNumber + '/' + nummerVraag,
+            type: 'PUT'
+        });
+    }
+    
+    function showAnswerFilmFragment(rondeNumber, nummerVraag) {
+            if (!currentActiveTeam) {
+                alert("Missing active team!");
+                return;
+            }
+            
+            $.ajax({
+                url: '/admin/FilmFragment/' + currentActiveTeam + '/' + rondeNumber + '/' + nummerVraag,
+                type: 'PUT'
+            });
+        }
+        
+        function showAnswerFinale(rondeNumber, nummerVraag) {
+                    if (!currentActiveTeam) {
+                        alert("Missing active team!");
+                        return;
+                    }
+                    
+                    $.ajax({
+                        url: '/admin/FinaleRonde/' + currentActiveTeam + '/' + rondeNumber + '/' + nummerVraag,
+                        type: 'PUT'
+                    });
+                }
+    
+    function showAnswerPuzzelRonde(rondeNumber, groepNummer) {
+            if (!currentActiveTeam) {
+                alert("Missing active team!");
+                return;
+            }
+            
+            $.ajax({
+                url: '/admin/PuzzelRonde/' + currentActiveTeam + '/' + rondeNumber + '/' + groepNummer,
+                type: 'PUT'
+            });
+        }
+
+    function nextQuestion(teamName) {
+        $.ajax({
+            url: '/admin/DrieZesNegenStatus/' + teamName,
+            type: 'PUT'
+        });
+    }
+    
+    function addSecondsToTeam(teamName) {
+            $.ajax({
+                url: '/admin/AddSecondsToTeam/' + teamName,
+                type: 'PUT'
+            });
+        }
+        
+        function removeSecondsFromTeam(teamName) {
+                    $.ajax({
+                        url: '/admin/RemoveSecondsFromTeam/' + teamName,
+                        type: 'PUT'
+                    });
+                }
+                
+                function disableTeam(teamName) {
+                                    $.ajax({
+                                        url: '/admin/DisableTeam/' + teamName,
+                                        type: 'PUT'
+                                    });
+                                }
+    
+    function setRondeActief(rondeNumber) {
+        currentActiveTeam = '';
+        
+        $.ajax({
+            url: '/admin/OpenDeur/SetRondeActive/' + rondeNumber,
+            type: 'PUT'
+        });
+    }
+    
+    function setPuzzleRondeActief(rondeNumber) {
+            currentActiveTeam = '';
+            
+            $.ajax({
+                url: '/admin/PuzzleRonde/SetRondeActive/' + rondeNumber,
+                type: 'PUT'
+            });
+        }
+        
+        function setFilmFragmentActief(rondeNumber) {
+                    currentActiveTeam = '';
+                    
+                    $.ajax({
+                        url: '/admin/FilmFragment/SetRondeActive/' + rondeNumber,
+                        type: 'PUT'
+                    });
+                }
+                
+                 function setFinaleActief(rondeNumber) {
+                                    currentActiveTeam = '';
+                                    
+                                    $.ajax({
+                                        url: '/admin/Finale/SetRondeActive/' + rondeNumber,
+                                        type: 'PUT'
+                                    });
+                                }
+</script>

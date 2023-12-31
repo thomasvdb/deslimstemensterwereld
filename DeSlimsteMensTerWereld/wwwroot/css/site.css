@@ -1,0 +1,133 @@
+html {
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  margin-bottom: 60px;
+  background-image: url('../images/background-template.jpg');
+  background-repeat: repeat;
+  font-family: 'Montserrat', sans-serif;
+}
+
+h2, h3, p, .question-numbers, .open-deur, .film-fragment {
+  color: #FFFFFF;
+}
+
+.container {
+  max-width: 1500px;
+}
+
+.teams { margin: 0 auto; }
+
+.teams,
+.question-numbers {
+  height: 250px;
+}
+
+.team-names {
+  float: left;
+  display: inline;
+  margin: 0 50px 0 50px;
+}
+
+.team-names h2,
+.question-numbers {
+  font-size: 48px;
+}
+
+.team-names p {
+  font-size: 36px;
+}
+
+.question {
+  padding: 0 20px;
+}
+
+.question-numbers span:nth-child(3n+3) {  
+  font-size: 100px;
+}
+
+.seconds {
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  border-color:black;
+  background-color: #510506;
+  color:white;
+  font-size:1.3em;
+}
+
+.active-question {
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  border-color:black;
+  background-color: #a11c15;
+  color:white;
+  padding-left:15px;
+  padding-right:15px;
+  padding-top:10px;
+  padding-bottom:10px;
+  font-size:1.3em;
+}
+
+.open-deur li,
+.film-fragment li {
+  list-style: none;
+  margin: 40px 0 40px -40px;
+}
+
+.open-deur h3,
+.film-fragment h3 {
+  font-size: 56px;
+  margin-bottom: 25px;
+}
+
+.open-deur .antwoord,
+.film-fragment .antwoord {
+  font-size: 40px;
+}
+
+.open-deur .blur,
+.film-fragment .blur {
+  filter: blur(10px);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 100px); /* You can adjust the height as needed */
+  gap: 10px; /* Adjust the gap between grid items */
+  justify-content: center; /* Centers the grid horizontally */
+  align-content: center; /* Centers the grid vertically */
+}
+
+.grid-item {
+  background-color: #78281d;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+}
+
+.grid-item-active {
+  background-color: #001d3c;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+}
+
+.open-deur ul {
+  float: left;
+  margin-right: 50px;
+}

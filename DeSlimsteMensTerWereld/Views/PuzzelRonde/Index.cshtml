@@ -1,0 +1,115 @@
+﻿@model DeSlimsteMensTerWereld.Models.PuzzelRonde.PuzzelRondeViewModel
+@{
+    ViewData["Title"] = "Puzzel";
+}
+
+<div class="text-center">
+    <div class="teams">
+        @foreach (var team in @Model.Teams)
+        {
+            <div class="team-names">
+                <h2 class="display-4">@team.TeamName</h2>
+                <p class="seconds" id="seconds-@team.TeamName.Replace(' ', '-').ToLower()">@team.AmountOfSecondsLeft</p>
+            </div>
+        }
+    </div>
+
+    <div class="open-deur">
+    @{ var rondeNummer = 1;
+       var groupAndAnswer = new List<KeyValuePair<string, string>>(); }
+    @foreach (var ronde in Model.Rondes)
+    {
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group1.Trefwoord1, ronde.Group1.Antwoord));
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group1.Trefwoord2, ronde.Group1.Antwoord));
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group1.Trefwoord3, ronde.Group1.Antwoord));
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group1.Trefwoord4, ronde.Group1.Antwoord));
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group2.Trefwoord1, ronde.Group2.Antwoord));
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group2.Trefwoord2, ronde.Group2.Antwoord));
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group2.Trefwoord3, ronde.Group2.Antwoord));
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group2.Trefwoord4, ronde.Group2.Antwoord));
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group3.Trefwoord1, ronde.Group3.Antwoord));
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group3.Trefwoord2, ronde.Group3.Antwoord));
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group3.Trefwoord3, ronde.Group3.Antwoord));
+        groupAndAnswer.Add(new KeyValuePair<string, string>(ronde.Group3.Trefwoord4, ronde.Group3.Antwoord));
+
+        var randomOrder = groupAndAnswer.OrderBy(a => Guid.NewGuid()).ToList();
+        
+        <div id="opendeur-ronde-@rondeNummer" style="display: none;">
+            <h3>Ronde @rondeNummer</h3>
+            
+            <ul>
+                <li class="blur antwoord antwoord-1">@ronde.Group1.Antwoord</li>
+                <li class="blur antwoord antwoord-2">@ronde.Group2.Antwoord</li>
+                <li class="blur antwoord antwoord-3">@ronde.Group3.Antwoord</li>
+            </ul>
+            
+            <div class="grid-container">
+                @foreach (var trefwoord in randomOrder)
+                {
+                    <div class="grid-item antwoord-1 @trefwoord.Value.ToLower().Replace(' ', '-')">@trefwoord.Key</div>
+                }
+            </div>
+        </div>
+
+        rondeNummer++;
+        groupAndAnswer = new List<KeyValuePair<string, string>>();
+    }
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+     function updateSeconds() {
+         $.get('/admin/DrieZesNegenStatus', function(data) {
+             console.log(data);
+            
+             data.teams.forEach((team) => {
+                 const teamName = '#seconds-' + team.teamName.replace(' ', '-').replace(' ', '-').toLowerCase();
+                 $(teamName).html(team.amountOfSecondsLeft)
+             });
+
+             setTimeout(updateSeconds, 500);
+         });
+     }
+     
+     function updateRondeDetails() {
+          $.get('/puzzelronde/rondedetails', function(data) {
+              console.log(data);
+             
+              var rondeIndex = 1;
+              data.rondes.forEach((ronde) => {
+                  const rondeId = '#opendeur-ronde-' + rondeIndex;
+
+                  if (ronde.group1.isActive) {
+                    $(rondeId + ' .' + ronde.group1.antwoord.toLowerCase().replaceAll(' ', '-')).css({ 'background-color': '#001d3c' });
+                    $(rondeId + ' .antwoord-1').removeClass('blur');
+                  }
+                  
+                  if (ronde.group2.isActive) {
+                      $(rondeId + ' .' + ronde.group2.antwoord.toLowerCase().replaceAll(' ', '-')).css({ 'background-color': '#001d3c' });
+                      $(rondeId + ' .antwoord-2').removeClass('blur');
+                   }
+                
+                if (ronde.group3.isActive) {
+                    $(rondeId + ' .' + ronde.group3.antwoord.toLowerCase().replaceAll(' ', '-')).css({ 'background-color': '#001d3c' });
+                    $(rondeId + ' .antwoord-3').removeClass('blur');
+                  }
+                
+                if (rondeIndex === data.activeRonde) {
+                  $(rondeId).show();
+              } else {
+                  $('#opendeur-ronde-' + rondeIndex).hide();
+              }
+ 
+                 rondeIndex++;       
+              });
+    
+              setTimeout(updateRondeDetails, 500);
+          });
+      }
+     
+     updateSeconds();
+     updateRondeDetails();
+ </script>
+}
